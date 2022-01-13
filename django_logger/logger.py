@@ -28,6 +28,8 @@ class DjangoLogger:
         Returns:
             None    
         '''
+        if not os.path.exists(f'{self.BASE_DIR}/logs'):
+            os.makedirs(f'{self.BASE_DIR}/logs')
         self._handler_setting()
 
     def _handler_setting(self) -> None:
