@@ -1,8 +1,10 @@
+from optparse import Option
 import os
+from typing import Optional
 
 class DjangoLogger:
     
-    def __init__(self, base_dir: str, host=None, url=None, method=None) -> None:
+    def __init__(self, base_dir: str, host: Optional[str] = None, url: Optional[str] = None, method: Optional[str] =None) -> None:
         '''
         Takes the base directory of the project to use it as log file storage location.
         Parameters:
@@ -64,7 +66,7 @@ class DjangoLogger:
                     'class': 'logging.StreamHandler'
                 }  
 
-    def get_logger_settings(self):
+    def get_logger_settings(self) -> dict:
         '''
         Returns the logger settings for django project
         Parameters:
