@@ -4,6 +4,10 @@
 `LogStack` is a convenience package to communicate with a `LogStack` server,
 which is available as a `Docker` image [here](https://github.com/strativ-dev/log-collector).
 
+## Getting Started
+```bash
+    pip install logstack
+```
 
 ## Contributing
 If you face any issues with project, please create and submit an issue,
