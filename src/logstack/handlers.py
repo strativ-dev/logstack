@@ -1,80 +1,42 @@
 from functools import wraps
+from inspect import trace
+import traceback
+from typing import Any
+from time import time
 
-# TODO: Refactor
-# def file_logger(function, project_name: str):
-#     '''
-#     Takes a function as argument, executes the function in a try catch block and logs the exception in error_log.log file if raise any or the function throws any.
-#     Also logs the successful function execution with execution time.
-#     Parameters:
-#         function -> function
-#         project_name -> str : Name of the project
-#     retunrs:
-#         result -> results returned from the executed function
-#     '''
-#     def wrapper(*args, **kwargs):
-#         result = None
-#         try:
-#             t1 = time.time()
-#             result = function(*args, **kwargs)
-#             execution_time = time.time() - t1
-#             file_error_logger.error(f'{str(function.__name__)}() executed successfully.', extra={'Project name': project_name,
-#                                'Execution duration': execution_time, 'log_type': 'Successful execution'})
-#         except Exception as e:
-#             file_error_logger.error(traceback.format_exc(), extra={'Project name': project_name,
-#                                'During': f'{str(function.__name__)}() execution.', 'log_type': 'Error'})
-#         return result
+from .loggers import Logger
+from .serializers import LogSerializer
 
-#     return wrapper
+def log_to_remote(logger: Logger) -> Any:
+    '''
+    Takes a function as argument, executes the function in a try catch block and
+    logs the exception in remote server if raise any or the function throws any.
 
-# TODO: Refactor
-# def http_logger(*args, **kwargs):
-#     '''
-#     Takes a function as argument, executes the function in a try catch block and logs the exception in remote server if raise any or the function throws any.
-#     Also logs the successful function execution with execution time.
-#     Parameters:
-#         function -> function
-#         project_name -> str : Name of the project
-#     retunrs:
-#         result -> results returned from the executed function
-#     '''
-#     def wrapper(func):
-#         result = None
-#         logger = RemoteLogger('54.93.244.57','24225', 'health_check.log')
-#         try:
-#             t1 = time.time()
-#             result = func(*args, **kwargs)
-#             execution_time = time.time() - t1
-#             log = {'message': f'{str(func.__name__)}() executed successfully.', 'Execution duration': execution_time, 'log_type': 'Successful execution'}
-#             logger.send_remote_log(log, 'post')
-#         except Exception as e:
-#             log = {'message': traceback.format_exc(), 'During': f'{str(func.__name__)}() execution.', 'log_type': 'Error'}
-#             logger.send_remote_log(log, 'post')
-#         return result
+    Also logs the successful function execution with execution time.
+    '''
+    def decorator(function):
+        def wrapper(*args, **kwargs):
+            result = None
 
-#     return wrapper
+            try:
+                start_time = time()
+                result = function(*args, **kwargs)
+                execution_time = time() - start_time
+                logger.log_to_remote(
+                    LogSerializer(
+                        execution_status=True,
+                        message=f"Successfully executed function: `{function.__name__}`",
+                        execution_time=execution_time,
+                    )
+                )
+            except Exception as _exn:
+                logger.log_to_remote(
+                    LogSerializer(
+                        execution_status=False,
+                        message=f"{traceback.format_exc()} during the execution of {function.__name__}",
+                    )
+                )
 
-
-def log_to_remote():
-    pass
-
-def log_to_file():
-    pass
-
-
-def logger(function):
-    pass
-
-
-def file_logger(function, name):
-    @wraps(function)
-    def wrapper(*args, **kwargs):
-        return function(*args, **kwargs)
-
-    return wrapper
-
-def remote_logger(function, name):
-    @wraps(function)
-    def wrapper(*args, **kwargs):
-        return function(*args, **kwargs)
-
-    return wrapper
+            return result
+        return wrapper
+    return decorator
