@@ -18,12 +18,17 @@ class Logger(object):
         self.url = url
         self.port = port
         self.log_name = log_name
+        self.is_valid()
 
     def log_to_remote(self, log: LogSerializer) -> None:
         requests.post(
             url=f"{self.scheme}://{self.url}:{self.port}/{self.log_name}",
             json=log.data
         )
+
+    def is_valid(self):
+        # TODO: implement validator
+        pass
 
     def log_to_file() -> None:
         raise NotImplementedError
