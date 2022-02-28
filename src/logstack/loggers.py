@@ -20,9 +20,8 @@ class Logger(object):
         self.log_name = log_name
 
     def log_to_remote(self, log: LogSerializer) -> None:
-        log.data['log_name'] = self.log_name
         requests.post(
-            url=f"{self.scheme}://{self.url}:{self.port}/",
+            url=f"{self.scheme}://{self.url}:{self.port}/{self.log_name}",
             json=log.data
         )
 
