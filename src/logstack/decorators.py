@@ -31,7 +31,8 @@ def log_to_remote(logger: Logger) -> Any:
                 logger.log_to_remote(
                     LogSerializer(
                         execution_status=False,
-                        message=f"{traceback.format_exc()} during the execution of {function.__name__}",
+                        message=f"Error during the execution of {function.__name__}",
+                        traceback=traceback.format_exc(),
                     )
                 )
 
