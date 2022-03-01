@@ -20,10 +20,16 @@ class Logger(object):
         self.log_name = log_name
         self.is_valid()
 
-    def log_to_remote(self, log: LogSerializer) -> None:
+    def log_to_remote(self, data: dict, log_type: str) -> None:
+        '''
+        Sends logs to remote server
+        '''
+        # TODO: Restrict log_types
+
+        log = LogSerializer(data=data)
         requests.post(
-            url=f"{self.scheme}://{self.url}:{self.port}/{self.log_name}",
-            json=log.data
+            url=f"{self.scheme}://{self.url}:{self.port}/{self.log_name}.{log_type}",
+            json=log.get_data()
         )
 
     def is_valid(self):
