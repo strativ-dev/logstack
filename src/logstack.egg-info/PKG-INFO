@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: logstack
-Version: 0.0.4
+Version: 0.0.5
 Summary: logstack is a convenience package to communicate with a logstack server
 Home-page: https://github.com/strativ-dev/logstack
 Author: LogStack Team
