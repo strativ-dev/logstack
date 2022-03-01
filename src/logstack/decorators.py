@@ -21,15 +21,15 @@ def log_to_remote(logger: Logger) -> Any:
                 execution_time = time() - start_time
                 data = {
                     'message': 'Successfully executed',
-                    'function_name':function.__name__,
-                    'execution_time': execution_time
+                    'function_name': function.__name__,
+                    'execution_time': execution_time,
                 }
                 logger.log_to_remote(data=data, log_type='info')
             except Exception as _exn:
                 data = {
                     'message': 'Error during the execution',
-                    'function_name':function.__name__,
-                    'traceback': traceback.format_exc()
+                    'function_name': function.__name__,
+                    'traceback': traceback.format_exc(),
                 }
                 logger.log_to_remote(data=data, log_type='error')
 
