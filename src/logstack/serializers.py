@@ -30,7 +30,7 @@ class LogSerializer():
         for key, value in self.FIELDS_CONFIG.items():
             field_value_in_data = self.initial_data.get(key)
             if value.get('required') and not field_value_in_data:
-                raise Exception(f"`{key}` is required but not provided in data")
+                raise AttributeError(f"`{key}` is required but not provided in data")
             elif not value.get('required') and not field_value_in_data:
                 self.data[key] = value.get('default')
             elif field_value_in_data:
@@ -40,7 +40,8 @@ class LogSerializer():
         self, 
         expected_type: object, 
         field_name: str, 
-        field_value: Any):
+        field_value: Any
+    ):
         '''
         Validates if the field types and the provided data types are identical
         Paramterers:
@@ -48,7 +49,7 @@ class LogSerializer():
         '''
         field_type = type(field_value)
         if not expected_type == field_type:
-            raise Exception(f"Expected {expected_type} but got {field_type}")
+            raise TypeError(f"Expected {expected_type} but got {field_type}")
         self.data[field_name] = field_value
 
 
