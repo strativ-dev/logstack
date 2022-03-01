@@ -63,6 +63,3 @@ class LogSerializer():
                 self.data[key] = value
         else:
             self.data.pop('extra')
-
-    def get_data(self):
-        return json.dumps(self.data)

@@ -27,9 +27,9 @@ class Logger(object):
         # TODO: Restrict log_types
 
         log = LogSerializer(data=data)
-        requests.post(
+        response = requests.post(
             url=f"{self.scheme}://{self.url}:{self.port}/{self.log_name}.{log_type}",
-            json=log.get_data()
+            json=log.data
         )
 
     def is_valid(self):

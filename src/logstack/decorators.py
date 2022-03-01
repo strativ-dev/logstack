@@ -3,7 +3,6 @@ from typing import Any
 from time import time
 
 from .loggers import Logger
-from .serializers import LogSerializer
 
 def log_to_remote(logger: Logger) -> Any:
     '''
@@ -20,21 +19,19 @@ def log_to_remote(logger: Logger) -> Any:
                 start_time = time()
                 result = function(*args, **kwargs)
                 execution_time = time() - start_time
-                logger.log_to_remote(
-                    LogSerializer(
-                        execution_status=True,
-                        message=f"Successfully executed function: `{function.__name__}`",
-                        execution_time=execution_time,
-                    )
-                )
+                data = {
+                    'message': 'Successfully executed',
+                    'function_name':function.__name__,
+                    'execution_time': execution_time
+                }
+                logger.log_to_remote(data=data, log_type='info')
             except Exception as _exn:
-                logger.log_to_remote(
-                    LogSerializer(
-                        execution_status=False,
-                        message=f"Error during the execution of {function.__name__}",
-                        traceback=traceback.format_exc(),
-                    )
-                )
+                data = {
+                    'message': 'Error during the execution',
+                    'function_name':function.__name__,
+                    'traceback': traceback.format_exc()
+                }
+                logger.log_to_remote(data=data, log_type='error')
 
             return result
         return wrapper
