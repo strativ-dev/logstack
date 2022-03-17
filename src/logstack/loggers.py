@@ -1,7 +1,11 @@
+# Python imports
 import requests
-import boto3
-from .serializers import LogSerializer
 
+# Third party imports
+
+# Self imports
+from .handlers import DjangoCloudWatchHandler
+from .serializers import LogSerializer
 
 class Logger(object):
     _instance = None
@@ -39,9 +43,37 @@ class Logger(object):
 
     def log_to_file() -> None:
         raise NotImplementedError
+        
 
-class DjangoLogger(Logger):
-    def _get_aws_cloud_watch_handler(self):
+class DjangoLogger:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            "aws": {
+                "format": "%(asctime)s [%(levelname)-8s] %(message)s [%(pathname)s:%(lineno)d]",
+                "datefmt": "%Y-%m-%d %H:%M:%S",
+            },
+        },
+        'handlers': {
+            'console': {'class': 'logging.StreamHandler', 'formatter': 'aws',},
+        },
+        "loggers": {}
+    }
+    
+    def __init__(self) -> None:
+        pass
+    
+    def set_cloud_watch_logger(
+        self, 
+        cloud_watch_handler: DjangoCloudWatchHandler,
+    ) -> None:
+        self.LOGGING['handlers']['cloudwatch'] = cloud_watch_handler
+        self.LOGGING['loggers']['cloudwatch'] = {
+            'level': cloud_watch_handler.log_level, 
+            'handlers': ['cloudwatch'], 
+            'propogate': False
+        }
         
 
 class FlaskLogger(Logger):
