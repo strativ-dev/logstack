@@ -22,19 +22,22 @@ class DjangoCloudWatchHandler:
         self.cloud_watch_aws_key = cloud_watch_aws_key
         self.cloud_watch_aws_region = cloud_watch_aws_region
     
-    def get_handler(self):
-        boto3_logs_client = boto3.client(
-            'logs',
-            aws_access_key_id=self.aws_access_key_id,
-            aws_secret_access_key=self.aws_secret_access_key,
-            region_name=self.region_name
-        )
+    def get_handler_data(self) -> dict:
+        boto3_logs_client = self._get_boto_client()
         cloud_watch_handler = {
             'level': self.log_level,
             'class': 'watchtower.CloudWatchLogHandler',
-            "boto3_client": boto3_logs_client,
+            'boto3_client': boto3_logs_client,
             'log_group_name': self.log_group_name,
             'formatter': 'aws',
         }
-
         return cloud_watch_handler
+    
+    def _get_boto_client(self) -> object:
+        boto3_logs_client = boto3.client(
+            'logs',
+            aws_access_key_id=self.cloud_watch_aws_id,
+            aws_secret_access_key=self.cloud_watch_aws_key,
+            region_name=self.cloud_watch_aws_region
+        )
+        return boto3_logs_client

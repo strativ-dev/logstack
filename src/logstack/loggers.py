@@ -46,7 +46,7 @@ class Logger(object):
         
 
 class DjangoLogger:
-    LOGGING = {
+    LOGGING_CONF = {
         'version': 1,
         'disable_existing_loggers': False,
         'formatters': {
@@ -68,12 +68,16 @@ class DjangoLogger:
         self, 
         cloud_watch_handler: DjangoCloudWatchHandler,
     ) -> None:
-        self.LOGGING['handlers']['cloudwatch'] = cloud_watch_handler
-        self.LOGGING['loggers']['cloudwatch'] = {
+
+        self.LOGGING_CONF['handlers']['cloudwatch'] = cloud_watch_handler
+        self.LOGGING_CONF['loggers']['cloudwatch'] = {
             'level': cloud_watch_handler.log_level, 
             'handlers': ['cloudwatch'], 
             'propogate': False
         }
+    
+    def get_logging_configuration(self) -> dict:
+        return self.LOGGING_CONF
         
 
 class FlaskLogger(Logger):
