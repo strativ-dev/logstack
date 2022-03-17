@@ -1,4 +1,5 @@
 import requests
+import boto3
 from .serializers import LogSerializer
 
 
@@ -38,6 +39,10 @@ class Logger(object):
 
     def log_to_file() -> None:
         raise NotImplementedError
+
+class DjangoLogger(Logger):
+    def _get_aws_cloud_watch_handler(self):
+        
 
 class FlaskLogger(Logger):
     pass
