@@ -67,12 +67,14 @@ class DjangoLogger:
     def set_cloud_watch_logger(
         self, 
         cloud_watch_handler: DjangoCloudWatchHandler,
+        handler_name: str,
+        logger_name: str,
     ) -> None:
         handler_data = cloud_watch_handler.get_handler_data()
-        self.LOGGING_CONF['handlers']['cloudwatch'] = handler_data
-        self.LOGGING_CONF['loggers']['cloudwatch'] = {
+        self.LOGGING_CONF['handlers'][handler_name] = handler_data
+        self.LOGGING_CONF['loggers'][logger_name] = {
             'level': cloud_watch_handler.log_level, 
-            'handlers': ['cloudwatch'], 
+            'handlers': [handler_name], 
             'propogate': False
         }
     
