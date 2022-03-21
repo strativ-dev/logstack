@@ -4,6 +4,7 @@ pyproject.toml
 setup.cfg
 src/logstack/__init__.py
 src/logstack/decorators.py
+src/logstack/handlers.py
 src/logstack/loggers.py
 src/logstack/serializers.py
 src/logstack.egg-info/PKG-INFO
